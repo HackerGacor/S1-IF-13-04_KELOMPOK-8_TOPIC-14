@@ -1,0 +1,130 @@
+package main
+import "fmt"
+
+type Akun struct {
+	NamaLayanan   string
+	Email         string
+	KataSandi     string
+	TanggalUpdate string
+}
+
+var DataAkun [100]Akun
+var totalAkun int = 0
+
+func main() {
+	var pilihan int
+	berjalan := true
+
+	for berjalan {
+		fmt.Println("\n=== 🔒 Aplikasi SecurePass (CLI) ===")
+		fmt.Println("1. Tambah Akun Baru")
+		fmt.Println("2. Tampilkan Semua Akun (Statistik & Kekuatan)")
+		fmt.Println("3. Ubah Data Akun")
+		fmt.Println("4. Hapus Akun")
+		fmt.Println("5. Cari Akun (Sequential Search)")
+		fmt.Println("6. Cari Akun (Binary Search)")
+		fmt.Println("7. Urutkan Nama Layanan A-Z (Selection Sort)")
+		fmt.Println("8. Urutkan Waktu Input Terbaru (Insertion Sort)")
+		fmt.Println("9. Keluar")
+		fmt.Print("Pilih menu (1-9): ")
+		fmt.Scan(&pilihan)
+
+		switch pilihan {
+		case 1:
+			TambahAkun()
+		case 2:
+			TampilAkun()
+		case 3:
+			UbahAkun()
+		case 4:
+			HapusAkun()
+		default:
+			fmt.Println("Pilihan tidak valid, silakan coba lagi.")
+		}
+	}
+}
+
+func TambahAkun() {
+	if totalAkun >= 100 {
+		fmt.Println("Kapasitas penyimpanan penuh (Maksimal 100 akun)!")
+	} else {
+		var layanan, email, sandi string
+		fmt.Print("Masukkan Nama Layanan (tanpa spasi): ")
+		fmt.Scan(&layanan)
+		fmt.Print("Masukkan Email/Username: ")
+		fmt.Scan(&email)
+		fmt.Print("Masukkan Kata Sandi: ")
+		fmt.Scan(&sandi)
+
+		DataAkun[totalAkun] = Akun{
+			NamaLayanan:   layanan,
+			Email:         email,
+			KataSandi:     sandi,
+			TanggalUpdate: time.Now().Format("2006-01-02 15:04:05"),
+		}
+		totalAkun++
+		fmt.Println("✔️ Akun berhasil ditambahkan!")
+	}
+}
+
+func TampilAkun() {
+	if totalAkun == 0 {
+		fmt.Println("Belum ada data akun yang tersimpan.")
+	} else {
+		fmt.Printf("\n--- Statistik: %d Total Akun Tersimpan ---\n", totalAkun)
+		for i := 0; i < totalAkun; i++ {
+			kekuatan := EvaluasiKataSandi(DataAkun[i].KataSandi)
+			fmt.Printf("[%d] Layanan: %s | Email: %s | Sandi: %s | Kekuatan: %s | Diperbarui: %s\n",
+				i+1, DataAkun[i].NamaLayanan, DataAkun[i].Email, DataAkun[i].KataSandi, kekuatan, DataAkun[i].TanggalUpdate)
+		}
+	}
+}
+
+func UbahAkun() {
+	var target string
+	fmt.Print("Masukkan nama layanan yang ingin diubah: ")
+	fmt.Scan(&target)
+
+	ditemukan := false
+	for i := 0; i < totalAkun && !ditemukan; i++ {
+		if strings.EqualFold(DataAkun[i].NamaLayanan, target) {
+			fmt.Print("Masukkan Email/Username Baru: ")
+			fmt.Scan(&DataAkun[i].Email)
+			fmt.Print("Masukkan Kata Sandi Baru: ")
+			fmt.Scan(&DataAkun[i].KataSandi)
+			DataAkun[i].TanggalUpdate = time.Now().Format("2006-01-02 15:04:05")
+
+			fmt.Println("✔️ Data akun berhasil diperbarui!")
+			ditemukan = true
+		}
+	}
+
+	if !ditemukan {
+		fmt.Println("✖️ Akun tidak ditemukan.")
+	}
+}
+
+func HapusAkun() {
+	var target string
+	fmt.Print("Masukkan nama layanan yang ingin dihapus: ")
+	fmt.Scan(&target)
+
+	idxHapus := -1
+	ditemukan := false
+	for i := 0; i < totalAkun && !ditemukan; i++ {
+		if strings.EqualFold(DataAkun[i].NamaLayanan, target) {
+			idxHapus = i
+			ditemukan = true
+		}
+	}
+
+	if idxHapus == -1 {
+		fmt.Println("✖️ Akun tidak ditemukan.")
+	} else {
+		for i := idxHapus; i < totalAkun-1; i++ {
+			DataAkun[i] = DataAkun[i+1]
+		}
+		totalAkun--
+		fmt.Println("✔️ Akun berhasil dihapus!")
+	}
+}
