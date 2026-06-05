@@ -1,5 +1,9 @@
 package main
-import "fmt"
+import (
+	"fmt"
+	"strings"
+	"time"
+)
 
 type Akun struct {
 	NamaLayanan   string
@@ -16,7 +20,7 @@ func main() {
 	berjalan := true
 
 	for berjalan {
-		fmt.Println("\n=== 🔒 Aplikasi SecurePass (CLI) ===")
+		fmt.Println("\n===  Aplikasi SecurePass (CLI) ===")
 		fmt.Println("1. Tambah Akun Baru")
 		fmt.Println("2. Tampilkan Semua Akun (Statistik & Kekuatan)")
 		fmt.Println("3. Ubah Data Akun")
@@ -63,7 +67,7 @@ func TambahAkun() {
 			TanggalUpdate: time.Now().Format("2006-01-02 15:04:05"),
 		}
 		totalAkun++
-		fmt.Println("✔️ Akun berhasil ditambahkan!")
+		fmt.Println(" Akun berhasil ditambahkan!")
 	}
 }
 
@@ -94,13 +98,13 @@ func UbahAkun() {
 			fmt.Scan(&DataAkun[i].KataSandi)
 			DataAkun[i].TanggalUpdate = time.Now().Format("2006-01-02 15:04:05")
 
-			fmt.Println("✔️ Data akun berhasil diperbarui!")
+			fmt.Println(" Akun berhasil diperbarui!")
 			ditemukan = true
 		}
 	}
 
 	if !ditemukan {
-		fmt.Println("✖️ Akun tidak ditemukan.")
+		fmt.Println(" Akun tidak ditemukan.")
 	}
 }
 
@@ -119,12 +123,12 @@ func HapusAkun() {
 	}
 
 	if idxHapus == -1 {
-		fmt.Println("✖️ Akun tidak ditemukan.")
+		fmt.Println(" Akun tidak ditemukan.")
 	} else {
 		for i := idxHapus; i < totalAkun-1; i++ {
 			DataAkun[i] = DataAkun[i+1]
 		}
 		totalAkun--
-		fmt.Println("✔️ Akun berhasil dihapus!")
+		fmt.Println(" Akun berhasil dihapus!")
 	}
 }
