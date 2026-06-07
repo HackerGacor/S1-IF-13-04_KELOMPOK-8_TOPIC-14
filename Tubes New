@@ -1,4 +1,5 @@
 package main
+
 import (
 	"fmt"
 	"strings"
@@ -20,7 +21,7 @@ func main() {
 	berjalan := true
 
 	for berjalan {
-		fmt.Println("\n===  Aplikasi SecurePass (CLI) ===")
+		fmt.Println("\n=== 🔒 Aplikasi SecurePass (CLI) ===")
 		fmt.Println("1. Tambah Akun Baru")
 		fmt.Println("2. Tampilkan Semua Akun (Statistik & Kekuatan)")
 		fmt.Println("3. Ubah Data Akun")
@@ -42,6 +43,17 @@ func main() {
 			UbahAkun()
 		case 4:
 			HapusAkun()
+		case 5:
+			SequentialSearch()
+		case 6:
+			BinarySearch()
+		case 7:
+			SelectionSort()
+		case 8:
+			InsertionSort()
+		case 9:
+			fmt.Println("Terima kasih telah menggunakan SecurePass!")
+			berjalan = false
 		default:
 			fmt.Println("Pilihan tidak valid, silakan coba lagi.")
 		}
@@ -67,7 +79,7 @@ func TambahAkun() {
 			TanggalUpdate: time.Now().Format("2006-01-02 15:04:05"),
 		}
 		totalAkun++
-		fmt.Println(" Akun berhasil ditambahkan!")
+		fmt.Println("✔ Akun berhasil ditambahkan!")
 	}
 }
 
@@ -85,50 +97,173 @@ func TampilAkun() {
 }
 
 func UbahAkun() {
-	var target string
+	var target, target2 string
 	fmt.Print("Masukkan nama layanan yang ingin diubah: ")
 	fmt.Scan(&target)
+	fmt.Print("Masukkan username / email: ")
+	fmt.Scan(&target2)
 
 	ditemukan := false
 	for i := 0; i < totalAkun && !ditemukan; i++ {
-		if strings.EqualFold(DataAkun[i].NamaLayanan, target) {
+		if strings.EqualFold(DataAkun[i].NamaLayanan, target) && strings.EqualFold(DataAkun[i].Email, target2) {
 			fmt.Print("Masukkan Email/Username Baru: ")
 			fmt.Scan(&DataAkun[i].Email)
 			fmt.Print("Masukkan Kata Sandi Baru: ")
 			fmt.Scan(&DataAkun[i].KataSandi)
 			DataAkun[i].TanggalUpdate = time.Now().Format("2006-01-02 15:04:05")
 
-			fmt.Println(" Akun berhasil diperbarui!")
+			fmt.Println("✔ Data akun berhasil diperbarui!")
 			ditemukan = true
 		}
 	}
 
 	if !ditemukan {
-		fmt.Println(" Akun tidak ditemukan.")
+		fmt.Println("✖ Akun tidak ditemukan.")
 	}
 }
 
 func HapusAkun() {
-	var target string
+	var target, target2 string
 	fmt.Print("Masukkan nama layanan yang ingin dihapus: ")
 	fmt.Scan(&target)
+	fmt.Print("Masukkan username / email: ")
+	fmt.Scan(&target2)
 
 	idxHapus := -1
 	ditemukan := false
 	for i := 0; i < totalAkun && !ditemukan; i++ {
-		if strings.EqualFold(DataAkun[i].NamaLayanan, target) {
+		if strings.EqualFold(DataAkun[i].NamaLayanan, target) && strings.EqualFold(DataAkun[i].Email, target2) {
 			idxHapus = i
 			ditemukan = true
 		}
 	}
 
 	if idxHapus == -1 {
-		fmt.Println(" Akun tidak ditemukan.")
+		fmt.Println("✖ Akun tidak ditemukan.")
 	} else {
 		for i := idxHapus; i < totalAkun-1; i++ {
 			DataAkun[i] = DataAkun[i+1]
 		}
 		totalAkun--
-		fmt.Println(" Akun berhasil dihapus!")
+		fmt.Println("✔ Akun berhasil dihapus!")
 	}
+}
+
+func EvaluasiKataSandi(sandi string) string {
+	panjang := len(sandi) >= 8
+	adaAngka := strings.ContainsAny(sandi, "0123456789")
+	adaHurufBesar := strings.ContainsAny(sandi, "ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+
+	hasil := "LEMAH"
+	if panjang && adaAngka && adaHurufBesar {
+		hasil = "KUAT"
+	} else if panjang && (adaAngka || adaHurufBesar) {
+		hasil = "SEDANG"
+	}
+	return hasil
+}
+
+func SequentialSearch() {
+	var target string
+	fmt.Print("Masukkan nama layanan yang dicari: ")
+	fmt.Scan(&target)
+
+	ditemukan := false
+	for i := 0; i < totalAkun; i++ {
+		if strings.EqualFold(DataAkun[i].NamaLayanan, target) {
+			fmt.Printf("✔ Ditemukan! Layanan: %s | Email: %s | Sandi: %s\n",
+				DataAkun[i].NamaLayanan, DataAkun[i].Email, DataAkun[i].KataSandi)
+			ditemukan = true
+		}
+	}
+
+	if !ditemukan {
+		fmt.Println("✖ Akun tidak ditemukan.")
+	}
+}
+
+func BinarySearch() {
+	if totalAkun == 0 {
+		fmt.Println("Data kosong.")
+	} else {
+		for i := 0; i < totalAkun-1; i++ {
+			idxMin := i
+			for j := i + 1; j < totalAkun; j++ {
+				if strings.ToLower(DataAkun[j].NamaLayanan) < strings.ToLower(DataAkun[idxMin].NamaLayanan) {
+					idxMin = j
+				}
+			}
+			temp := DataAkun[i]
+			DataAkun[i] = DataAkun[idxMin]
+			DataAkun[idxMin] = temp
+		}
+
+		var target string
+		fmt.Print("Masukkan nama layanan (Binary Search - Exact Match): ")
+		fmt.Scan(&target)
+		target = strings.ToLower(target)
+
+		kiri := 0
+		kanan := totalAkun - 1
+		ditemukan := false
+		posisi := -1
+
+		for kiri <= kanan && !ditemukan {
+			tengah := (kiri + kanan) / 2
+			layananTengah := strings.ToLower(DataAkun[tengah].NamaLayanan)
+
+			if layananTengah == target {
+				posisi = tengah
+				ditemukan = true
+			} else if layananTengah < target {
+				kiri = tengah + 1
+			} else {
+				kanan = tengah - 1
+			}
+		}
+
+		if !ditemukan {
+			fmt.Println("✖ Akun tidak ditemukan.")
+		} else {
+			i := posisi
+			for i >= 0 && strings.ToLower(DataAkun[i].NamaLayanan) == target {
+				i--
+			}
+			i++
+			for i < totalAkun && strings.ToLower(DataAkun[i].NamaLayanan) == target {
+				fmt.Printf("✔ Ditemukan! Layanan: %s | Email: %s | Sandi: %s\n",
+					DataAkun[i].NamaLayanan, DataAkun[i].Email, DataAkun[i].KataSandi)
+				i++
+			}
+		}
+	}
+}
+
+func SelectionSort() {
+	for i := 0; i < totalAkun-1; i++ {
+		idxMin := i
+		for j := i + 1; j < totalAkun; j++ {
+			if strings.ToLower(DataAkun[j].NamaLayanan) < strings.ToLower(DataAkun[idxMin].NamaLayanan) {
+				idxMin = j
+			}
+		}
+		temp := DataAkun[i]
+		DataAkun[i] = DataAkun[idxMin]
+		DataAkun[idxMin] = temp
+	}
+	fmt.Println("✔ Data berhasil diurutkan secara alfabetis (A-Z) dengan Selection Sort!")
+}
+
+func InsertionSort() {
+	for i := 1; i < totalAkun; i++ {
+		key := DataAkun[i]
+		j := i - 1
+
+		for j >= 0 && DataAkun[j].TanggalUpdate < key.TanggalUpdate {
+			DataAkun[j+1] = DataAkun[j]
+			j = j - 1
+		}
+		DataAkun[j+1] = key
+	}
+	fmt.Println("✔ Data berhasil diurutkan berdasarkan waktu terbaru dengan Insertion Sort!")
 }
