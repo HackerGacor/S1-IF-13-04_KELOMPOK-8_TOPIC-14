@@ -20,7 +20,7 @@ func main() {
 	berjalan := true
 
 	for berjalan {
-		fmt.Println("\n=== 🔒 Aplikasi SecurePass (CLI) ===")
+		fmt.Println("\n===  Aplikasi SecurePass (CLI) ===")
 		fmt.Println("1. Tambah Akun Baru")
 		fmt.Println("2. Tampilkan Semua Akun (Statistik & Kekuatan)")
 		fmt.Println("3. Ubah Data Akun")
@@ -78,7 +78,7 @@ func TambahAkun() {
 			TanggalUpdate: time.Now().Format("2006-01-02 15:04:05"),
 		}
 		totalAkun++
-		fmt.Println("✔ Akun berhasil ditambahkan!")
+		fmt.Println(" Akun berhasil ditambahkan!")
 	}
 }
 
@@ -111,13 +111,13 @@ func UbahAkun() {
 			fmt.Scan(&DataAkun[i].KataSandi)
 			DataAkun[i].TanggalUpdate = time.Now().Format("2006-01-02 15:04:05")
 
-			fmt.Println("✔ Data akun berhasil diperbarui!")
+			fmt.Println(" Data akun berhasil diperbarui!")
 			ditemukan = true
 		}
 	}
 
 	if !ditemukan {
-		fmt.Println("✖ Akun tidak ditemukan.")
+		fmt.Println(" Akun tidak ditemukan.")
 	}
 }
 
@@ -138,13 +138,13 @@ func HapusAkun() {
 	}
 
 	if idxHapus == -1 {
-		fmt.Println("✖ Akun tidak ditemukan.")
+		fmt.Println(" Akun tidak ditemukan.")
 	} else {
 		for i := idxHapus; i < totalAkun-1; i++ {
 			DataAkun[i] = DataAkun[i+1]
 		}
 		totalAkun--
-		fmt.Println("✔ Akun berhasil dihapus!")
+		fmt.Println(" Akun berhasil dihapus!")
 	}
 }
 
@@ -170,7 +170,7 @@ func SequentialSearch() {
 	ditemukan := false
 	for i := 0; i < totalAkun; i++ {
 		if strings.EqualFold(DataAkun[i].NamaLayanan, target) {
-			fmt.Printf("✔ Ditemukan! Layanan: %s | Email: %s | Sandi: %s\n",
+			fmt.Printf(" Ditemukan! Layanan: %s | Email: %s | Sandi: %s\n",
 				DataAkun[i].NamaLayanan, DataAkun[i].Email, DataAkun[i].KataSandi)
 			ditemukan = true
 		}
@@ -250,7 +250,7 @@ func SelectionSort() {
 		DataAkun[i] = DataAkun[idxMin]
 		DataAkun[idxMin] = temp
 	}
-	fmt.Println("✔ Data berhasil diurutkan secara alfabetis (A-Z) dengan Selection Sort!")
+	fmt.Println(" Data berhasil diurutkan secara alfabetis (A-Z) dengan Selection Sort!")
 }
 
 func InsertionSort() {
@@ -264,5 +264,5 @@ func InsertionSort() {
 		}
 		DataAkun[j+1] = key
 	}
-	fmt.Println("✔ Data berhasil diurutkan berdasarkan waktu terbaru dengan Insertion Sort!")
+	fmt.Println(" Data berhasil diurutkan berdasarkan waktu terbaru dengan Insertion Sort!")
 }
