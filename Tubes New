@@ -177,7 +177,7 @@ func SequentialSearch() {
 	}
 
 	if !ditemukan {
-		fmt.Println("✖ Akun tidak ditemukan.")
+		fmt.Println(" Akun tidak ditemukan.")
 	}
 }
 
